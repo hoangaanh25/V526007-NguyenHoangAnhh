@@ -2,109 +2,85 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package buoi4;
+package btvnb4;
 
 /**
  *
  * @author HoangAnh
  */
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
 
-        Diem2D d1 = new Diem2D(1, 2);
-        Diem2D d2 = new Diem2D(3, 4);
+        Scanner sc = new Scanner(System.in);
 
-        Diem3D d3 = new Diem3D(1, 2, 3);
-        Diem3D d4 = new Diem3D(4, 5, 6);
+        // 1. Nhap danh sach nhan vien
+        System.out.print("Nhap so nhan vien: ");
+        int n = Integer.parseInt(sc.nextLine());
 
-        System.out.println("=== CAC DIEM BAN DAU ===");
-        System.out.println("d1: " + d1);
-        System.out.println("d2: " + d2);
-        System.out.println("d3: " + d3);
-        System.out.println("d4: " + d4);
-
-        System.out.println("\n=== KHOANG CACH ===");
-
-        System.out.println("Khoang cach d1 - d2: "
-                + d1.khoangCach(d2));
-
-        System.out.println("Khoang cach d3 - d4: "
-                + d3.khoangCach(d4));
-
-        System.out.println("\n=== DIEM DOI XUNG ===");
-
-        System.out.println("Doi xung d1: "
-                + d1.doiXung());
-
-        System.out.println("Doi xung d3: "
-                + d3.doiXung());
-
-        d1.tinhTien(2, 3);
-
-        d3.tinhTien(2, 3, 4);
-
-        System.out.println("\n=== SAU KHI TINH TIEN ===");
-
-        System.out.println("d1: " + d1);
-        System.out.println("d3: " + d3);
-
-        Diem2D[] ds = {
-            new Diem2D(1, 2),
-            new Diem2D(3, 4),
-            new Diem3D(1, 2, 3),
-            new Diem3D(4, 5, 6)
-        };
-
-        System.out.println("\n=== DANH SACH DIEM ===");
-
-        for (int i = 0; i < ds.length; i++) {
-            System.out.println(ds[i]);
+        if (n <= 0) {
+            System.out.println("So nhan vien phai lon hon 0");
+            return;
         }
 
-        double tong2D = 0;
-        double tong3D = 0;
+        Nhanvien[] ds = new Nhanvien[n];
 
-        for (int i = 0; i < ds.length - 1; i++) {
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nNhap nhan vien thu " + (i + 1));
 
-            if (ds[i] instanceof Diem3D
-                    && ds[i + 1] instanceof Diem3D) {
+            ds[i] = new Nhanvien();
+            ds[i].nhap(sc);
+        }
 
-                Diem3D a = (Diem3D) ds[i];
-                Diem3D b = (Diem3D) ds[i + 1];
+        // 2. Xuat danh sach nhan vien
+        System.out.println("\n=== DANH SACH NHAN VIEN ===");
 
-                tong3D = tong3D + a.khoangCach(b);
+        for (int i = 0; i < n; i++) {
+            ds[i].xuat();
+            System.out.println("----------------");
+        }
 
-            }
+        // 3. Tim nhan vien co SNCT nhieu nhat
+        int max = ds[0].getSnct();
 
-            else if (!(ds[i] instanceof Diem3D)
-                    && !(ds[i + 1] instanceof Diem3D)) {
-
-                tong2D = tong2D
-                        + ds[i].khoangCach(ds[i + 1]);
+        for (int i = 1; i < n; i++) {
+            if (ds[i].getSnct() > max) {
+                max = ds[i].getSnct();
             }
         }
 
-        System.out.println("\n=== TONG KHOANG CACH ===");
+        System.out.println("\n=== NHAN VIEN CONG TAC LAU NHAT ===");
 
-        System.out.println("Tong khoang cach cac diem 2D: "
-                + tong2D);
-
-        System.out.println("Tong khoang cach cac diem 3D: "
-                + tong3D);
-
-
-        Diem2D[] dsDoiXung = new Diem2D[ds.length];
-
-        for (int i = 0; i < ds.length; i++) {
-            dsDoiXung[i] = ds[i].doiXung();
+        for (int i = 0; i < n; i++) {
+            if (ds[i].getSnct() == max) {
+                ds[i].xuat();
+                System.out.println("----------------");
+            }
         }
 
+        // 4. Sap xep luong giam dan
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
 
-        System.out.println("\n=== DANH SACH DIEM DOI XUNG ===");
+                if (ds[i].tinhLuong() < ds[j].tinhLuong()) {
 
-        for (int i = 0; i < dsDoiXung.length; i++) {
-            System.out.println(dsDoiXung[i]);
+                    Nhanvien temp = ds[i];
+                    ds[i] = ds[j];
+                    ds[j] = temp;
+                }
+            }
         }
+
+        // 5. In danh sach sau khi sap xep
+        System.out.println("\n=== DANH SACH LUONG GIAM DAN ===");
+
+        for (int i = 0; i < n; i++) {
+            ds[i].xuat();
+            System.out.println("----------------");
+        }
+
+        sc.close();
     }
 }
